@@ -3,8 +3,10 @@ from datetime import date
 from django.core.validators import MinLengthValidator
 from django.db import models
 
-from .validators import validate_unique_email
+from .validators import validate_unique_email, ValidEmailDomain
+from faker import Faker
 
+VALID_DOMAIN_LIST = ('@gmail.com', '@yahoo.com', '@test.com')
 
 class Student(models.Model):
     first_name = models.CharField(
@@ -25,7 +27,7 @@ class Student(models.Model):
                                 blank=True)
     mail = models.EmailField(
         null=True,
-        validators=[validate_unique_email],
+        validators=[validate_unique_email, ValidEmailDomain(*VALID_DOMAIN_LIST)],
     )
 
 
@@ -34,3 +36,18 @@ class Student(models.Model):
 
     class Meta:
         db_table = 'students'
+    @classmethod
+    def generate_fake_data(cls, cnt):
+        f = Faker()
+
+        for _ in range(cnt):
+            first_name = f.first_name()
+            last_name = f.last_name()
+            mail = f'{first_name}.{last_name}{f.random.choice(VALID_DOMAIN_LIST)}'
+            birthday = f.date()
+            st = cls(first_name=first_name, last_name=last_name, mail=mail, birthday=birthday)
+            try:
+                st.full_clean()
+                st.save()
+            except:
+                print(f'Incorrect data{first_name}{last_name}{mail}{birthday}')

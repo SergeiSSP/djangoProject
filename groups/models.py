@@ -4,6 +4,8 @@ from django.core.validators import MinLengthValidator
 from django.db import models
 from .validators import validate_start_date
 
+
+
 class Group(models.Model):
     name = models.CharField(
         max_length=100,
@@ -24,3 +26,4 @@ class Group(models.Model):
 
     class Meta:
         db_table = 'groups'
+

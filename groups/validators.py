@@ -7,3 +7,4 @@ def validate_start_date(value):
             ('%(value)s is not a valid start date'),
             params={'value': value},
         )
+

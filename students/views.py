@@ -1,16 +1,76 @@
-from django.http import HttpResponse
+from django.db.models import Q
+from django.http import HttpResponse, HttpResponseRedirect
+from django.middleware.csrf import get_token
 from django.shortcuts import render  # noqa
 
+
+from webargs.fields import Str
+from webargs.djangoparser import use_args
+
+from students.forms import CreateStudentForm
 from students.models import Student
+from students.utils import qs2html
 
 
 def index(request):
-    students = Student.objects.all()
-    s = '<table>'
-    for student in students:
-        s += f'<tr><td>{student.first_name}</td><td>{student.last_name}</td><td>{student.mail}</td></tr>'
-    s += '</table>'
+    return HttpResponse('Welcome to LMS')
 
-    response = HttpResponse(s)
+
+@use_args(
+    {
+        'first_name': Str(required=False),
+        'last_name': Str(required=False),
+    },
+    location='query'
+)
+def get_students(request, args):
+    students = Student.objects.all()
+
+    if len(args) != 0 and args.get('first_name') or args.get('last_name'):
+        students = students.filter(
+            Q(first_name=args.get('first_name', '')) | Q(last_name=args.get('last_name', ''))
+        )
+
+    html_form = '''
+        <form method='get'>
+            <label for="first_name">First name:</label>
+            <input type="text" id="first_name" name="first_name" placeholder="John"><br><br>
+            <label for="last_name">Last name:</label>
+            <input type="text" id="last_name" name="last_name" placeholder="Doe"><br><br>
+            <input type="submit" value="Submit">
+        </form> 
+    '''
+
+    # if 'first_name' in args:
+    #     students = students.filter(first_name=args['first_name'])
+    #
+    # if 'last_name' in args:
+    #     students = students.filter(last_name=args['last_name'])
+
+    html = qs2html(students)
+
+    response = HttpResponse(html_form + html)
     return response
 
+
+#@csrf_exempt
+def create_student(request):
+    if request.method == 'GET':
+        form = CreateStudentForm()
+    elif request.method == 'POST':
+        form = CreateStudentForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/students')
+
+    token = get_token(request)
+    html_form = f'''
+            <form method='post'>
+            <input type = 'hiden' name = 'csrfmiddlewaretoken' value = '{token}'>
+                <table>
+                    {form.as_table()}
+                </table>
+                <input type="submit" value="Submit">
+            </form> 
+        '''
+    return HttpResponse(html_form)

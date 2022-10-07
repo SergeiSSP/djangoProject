@@ -5,7 +5,7 @@ from django.db import models
 
 from faker import Faker
 
-from .validators import ValidEmailDomain, validate_unique_email
+from .validators import ValidEmailDomain  # validate_unique_email
 
 VALID_DOMAIN_LIST = ('@gmail.com', '@yahoo.com', '@test.com')
 
@@ -29,11 +29,11 @@ class Student(models.Model):
                                 blank=True)
     mail = models.EmailField(
         null=True,
-        validators=[validate_unique_email, ValidEmailDomain(*VALID_DOMAIN_LIST)],
+        validators=[ValidEmailDomain(*VALID_DOMAIN_LIST)],
     )
     phone = models.CharField(
         max_length=13,
-        verbose_name='Phone_number',
+        verbose_name='Phone number',
         db_column='phone_number',
         blank=True,
         null=True,

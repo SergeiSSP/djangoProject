@@ -3,13 +3,12 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.middleware.csrf import get_token
 from django.shortcuts import render  # noqa
 
-
-from webargs.fields import Str
-from webargs.djangoparser import use_args
-
 from students.forms import CreateStudentForm
 from students.models import Student
 from students.utils import qs2html
+
+from webargs.djangoparser import use_args
+from webargs.fields import Str
 
 
 def index(request):
@@ -39,7 +38,7 @@ def get_students(request, args):
             <input type="text" id="last_name" name="last_name" placeholder="Doe"><br><br>
             <input type="submit" value="Submit">
         </form> 
-    '''
+        '''
 
     # if 'first_name' in args:
     #     students = students.filter(first_name=args['first_name'])
@@ -53,7 +52,7 @@ def get_students(request, args):
     return response
 
 
-#@csrf_exempt
+# @csrf_exempt
 def create_student(request):
     if request.method == 'GET':
         form = CreateStudentForm()
@@ -66,7 +65,7 @@ def create_student(request):
     token = get_token(request)
     html_form = f'''
             <form method='post'>
-            <input type = 'hiden' name = 'csrfmiddlewaretoken' value = '{token}'>
+            <input type = 'hidden' name = 'csrfmiddlewaretoken' value = '{token}'>
                 <table>
                     {form.as_table()}
                 </table>

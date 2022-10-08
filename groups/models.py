@@ -2,10 +2,11 @@ import datetime
 
 from django.core.validators import MinLengthValidator
 from django.db import models
+from faker import Faker
 
 from .validators import validate_start_date
 
-
+GROUP_NAMES = ('Python', 'Java', 'C++', 'Data Science')
 class Group(models.Model):
     name = models.CharField(
         max_length=100,
@@ -26,3 +27,17 @@ class Group(models.Model):
 
     class Meta:
         db_table = 'groups'
+
+
+    @classmethod
+    def generate_fake_data(cls, cnt):
+        f = Faker()
+
+        for _ in range(cnt):
+            name = f.random.choice(GROUP_NAMES)
+            gr = cls(name=name)
+            try:
+                gr.full_clean()
+                gr.save()
+            except:
+                print('Incorrect data')

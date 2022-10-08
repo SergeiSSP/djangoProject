@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>LMS -{{ title }}</title>
+</head>
+<body>
+        <form method='get'>
+            <label for="name">First name:</label>
+            <input type="text" id="name" name="name" placeholder="Python"><br><br>
+{#            <label for="last_name">Last name:</label>#}
+{#            <input type="text" id="last_name" name="last_name" placeholder="Doe"><br><br>#}
+            <input type="submit" value="Submit">
+        </form>
+        <br>
+        <a href='create/'>Create group</a>
+        <br>
+        <table>
+        {% for group in groups %}
+            <tr>
+                <td>{{ group.pk }}</td>
+                <td><a href="detail/{{ group.pk }}/">{{ group.name }}</a></td>
+                <td><a href='update/{{ group.pk }}'>Edit</a></td>
+            </tr>
+        {% endfor %}
+        </table>
+</body>
+</html>

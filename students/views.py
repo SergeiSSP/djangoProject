@@ -62,6 +62,7 @@ def create_student(request):
         '''
     return HttpResponse(html_form)
 
+
 def update_student(request, student_id):
     student = Student.objects.get(pk=student_id)
     if request.method == 'GET':
@@ -85,9 +86,7 @@ def update_student(request, student_id):
     return HttpResponse(html_form)
 
 
-
-
-def detailed_student(request,  student_id):
+def detailed_student(request, student_id):
     student = Student.objects.get(pk=student_id)
     return render(
         request,

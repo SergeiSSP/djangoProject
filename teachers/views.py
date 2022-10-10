@@ -2,31 +2,30 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.middleware.csrf import get_token
 from django.shortcuts import render
 
-from groups.forms import CreateGroupForm, UpdateGroupForm
-from groups.models import Group
+from teachers.forms import CreateTeacherForm, UpdateTeacherForm
+from teachers.models import Teacher
 
 
-def get_groups(request):
-    groups = Group.objects.all()
+def get_teachers(request):
+    teachers = Teacher.objects.all()
     return render(
         request,
-        'groups/list.html',
+        'teachers/list.html',
         context={
-            'title': 'list of groups',
-            'groups': groups
+            'title': 'List of teachers',
+            'teachers': teachers
         }
     )
 
 
-def create_group(request):
+def create_teacher(request):
     if request.method == 'GET':
-        form = CreateGroupForm()
-    elif request.method == "POST":
-        form = CreateGroupForm(request.POST)
+        form = CreateTeacherForm()
+    elif request.method == 'POST':
+        form = CreateTeacherForm(request.POST)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect('/students')
-
+            return HttpResponseRedirect('/teachers')
     token = get_token(request)
     html_form = f'''
                 <form method='post'>
@@ -40,31 +39,15 @@ def create_group(request):
     return HttpResponse(html_form)
 
 
-
-def detailed_group(request, group_id):
-    group = Group.objects.get(pk=group_id)
-    return render(
-        request,
-        'groups/details.html',
-        context={
-            'group': group,
-            'title': group.name,
-        }
-
-    )
-
-
-
-
-def update_group(request, group_id):
-    group = Group.objects.get(pk=group_id)
+def update_teacher(request, teacher_id):
+    teacher = Teacher.objects.get(pk=teacher_id)
     if request.method == 'GET':
-        form = UpdateGroupForm(instance=group)
+        form = UpdateTeacherForm(instance=teacher)
     elif request.method == 'POST':
-        form = UpdateGroupForm(request.POST, instance=group)
+        form = UpdateTeacherForm(request.POST, instance=teacher)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect('/groups')
+            return HttpResponseRedirect('/teachers')
 
     token = get_token(request)
     html_form = f'''
@@ -77,3 +60,12 @@ def update_group(request, group_id):
             </form> 
         '''
     return HttpResponse(html_form)
+
+
+def detailed_teacher(request, teacher_id):
+    teacher = Teacher.objects.get(pk=teacher_id)
+    return render(
+        request,
+        'teachers/details.html',
+        {'teacher': teacher}
+    )

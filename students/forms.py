@@ -1,4 +1,5 @@
 from django import forms
+from django.core.exceptions import ValidationError
 
 from students.models import Student
 
@@ -31,8 +32,16 @@ class CreateStudentForm(forms.ModelForm):
 
     def clean_phone(self):
         value = self.cleaned_data.get('phone')
-        cleaned_value = ''.join([i for i in value if not i.isalpha()])
-        return cleaned_value
+        try:
+            cleaned_value = ''.join([i for i in value if not i.isalpha()])
+            if len(cleaned_value) < 10:
+                raise ValidationError(f'Phone number{cleaned_value} is too short')
+            else:
+                return cleaned_value
+        except TypeError:
+            return value
+
+
 
 class UpdateStudentForm(forms.ModelForm):
     class Meta:

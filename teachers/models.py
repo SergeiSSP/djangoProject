@@ -2,34 +2,32 @@ from datetime import date
 
 from django.core.validators import MinLengthValidator
 from django.db import models
-
 from faker import Faker
-
-from .validators import ValidEmailDomain  # validate_unique_email
 
 VALID_DOMAIN_LIST = ('@gmail.com', '@yahoo.com', '@test.com')
 
 
-class Student(models.Model):
+class Teacher(models.Model):
     first_name = models.CharField(
         max_length=50,
-        verbose_name='First Name',
+        verbose_name='First name',
         db_column='first_name',
-        validators=[MinLengthValidator(2, "First name must be greater than 1 character")]
+        validators=[MinLengthValidator(2, 'First name must be greater than 1 character')]
     )
     last_name = models.CharField(
         max_length=50,
-        verbose_name='Last Name',
+        verbose_name='Last_name',
         db_column='last_name',
-        validators=[MinLengthValidator(2, "Last name must be greater than 1 character")],
-        error_messages={'min_length': 'Last name must be greater than 1 character'}
+        validators=[MinLengthValidator(2, 'First name must be greater than 1 character')]
     )
-    birthday = models.DateField(default=date.today,
-                                null=True,
-                                blank=True)
+    birthday = models.DateField(
+        default=date.today,
+        null=False,
+        blank=False,
+    )
     mail = models.EmailField(
         null=True,
-        validators=[ValidEmailDomain(*VALID_DOMAIN_LIST)],
+        blank=True,
     )
     phone = models.CharField(
         max_length=13,
@@ -42,9 +40,9 @@ class Student(models.Model):
     def __str__(self):
         return f'{self.first_name} {self.last_name}'
 
-    class Meta:
-        db_table = 'students'
 
+    class Meta:
+        db_table = 'teachers'
     @classmethod
     def generate_fake_data(cls, cnt):
         f = Faker()

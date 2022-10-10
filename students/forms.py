@@ -14,6 +14,10 @@ class CreateStudentForm(forms.ModelForm):
             'phone',
         ]
 
+        widgets = {
+            'birthday': forms.DateInput(attrs={'type': 'date'})
+        }
+
     def clean_last_name(self):
         value = self.cleaned_data.get('last_name')
         cleaned_value = value.lower().capitalize()
@@ -30,3 +34,15 @@ class CreateStudentForm(forms.ModelForm):
         cleaned_value = ''.join([i for i in value if not i.isalpha()])
         return cleaned_value
 
+class UpdateStudentForm(forms.ModelForm):
+    class Meta:
+        model = Student
+        fields = [
+            'first_name',
+            'last_name',
+            'birthday',
+            'phone',
+        ]
+        widgets = {
+            'birthday': forms.DateInput(attrs={'type': 'date'})
+        }

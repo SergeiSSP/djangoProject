@@ -31,6 +31,13 @@ class Student(models.Model):
         null=True,
         validators=[validate_unique_email, ValidEmailDomain(*VALID_DOMAIN_LIST)],
     )
+    phone = models.CharField(
+        max_length=13,
+        verbose_name='Phone_number',
+        db_column='phone_number',
+        blank=True,
+        null=True,
+    )
 
     def __str__(self):
         return f'{self.first_name} {self.last_name}'

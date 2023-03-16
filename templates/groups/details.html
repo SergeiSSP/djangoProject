@@ -5,11 +5,10 @@
     <title>LMS -{{ title }}</title>
 </head>
 <body>
-<p><a href="/groups/update/{{ group.pk }}/">{{ group.name }}</a></p>
-    <p>{{ group.last_name }}</p>
+<p><a href="{% url 'group:update' group.pk %}">{{ group.name }}</a></p>
     <p>{{ group.start_date }}</p>
     <p>{{ group.description }}</p>
-    <a href="/groups/">Back to list</a>
+    <a href="{% url 'group:list' %}">Back to list</a>
 
 
 

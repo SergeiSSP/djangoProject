@@ -13,7 +13,7 @@
             <input type="submit" value="Submit">
         </form>
         <br>
-        <a href='create/'>Create group</a>
+        <a href="{% url 'group:create' %}">Create group</a>
         <br>
         <table>
         {% for group in groups %}
